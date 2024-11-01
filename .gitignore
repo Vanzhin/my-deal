@@ -1,0 +1,5 @@
+
+.idea/
+
+*.pid
+.env
