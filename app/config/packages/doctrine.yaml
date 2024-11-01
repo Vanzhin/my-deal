@@ -15,12 +15,12 @@ doctrine:
         auto_mapping: true
         enable_lazy_ghost_objects: true
         mappings:
-#            Monitors:
-#                type: xml
-#                is_bundle: false
-#                dir: '%kernel.project_dir%/src/Monitors/Infrastructure/Database/ORM/Aggregate'
-#                prefix: 'App\Monitors\Domain\Aggregate'
-#                alias: Monitors
+            Customers:
+                is_bundle: false
+                type: xml
+                dir: '%kernel.project_dir%/src/Customers/Infrastructure/Database/ORM/Aggregate'
+                prefix: 'App\Customers\Domain\Aggregate'
+                alias: Customers
 
 when@prod:
     doctrine:

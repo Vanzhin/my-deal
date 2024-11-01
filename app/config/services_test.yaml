@@ -8,10 +8,10 @@ services:
     tags:
       - { "name": 'doctrine.fixture.orm' }
 
-  App\Share\Infrastructure\Bus\CommandBus:
+  App\Shared\Infrastructure\Bus\CommandBus:
     public: true
 
-  App\Share\Infrastructure\Bus\QueryBus:
+  App\Shared\Infrastructure\Bus\QueryBus:
     public: true
-  App\Share\Infrastructure\Bus\EventBus:
+  App\Shared\Infrastructure\Bus\EventBus:
     public: true

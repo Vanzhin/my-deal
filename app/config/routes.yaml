@@ -1,7 +1,7 @@
 controllers:
     resource:
         path: ../src/Share/Infrastructure/Controller/
-        namespace: App\Share\Infrastructure\Controller
+        namespace: App\Shared\Infrastructure\Controller
     type: attribute
 
 kernel:

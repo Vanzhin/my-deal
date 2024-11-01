@@ -17,23 +17,23 @@ services:
     resource: '../src/'
 
   _instanceof:
-    App\Share\Application\Command\CommandHandlerInterface:
+    App\Shared\Application\Command\CommandHandlerInterface:
       tags:
         - { name: messenger.message_handler, bus: command.bus }
 
-    App\Share\Application\Query\QueryHandlerInterface:
+    App\Shared\Application\Query\QueryHandlerInterface:
       tags:
         - { name: messenger.message_handler, bus: query.bus }
 
-    App\Share\Application\Event\EventHandlerInterface:
+    App\Shared\Application\Event\EventHandlerInterface:
       tags:
         - { name: messenger.message_handler, bus: event.bus }
 
-    App\Share\Application\Message\MessageHandlerInterface:
+    App\Shared\Application\Message\MessageHandlerInterface:
       tags:
         - { name: messenger.message_handler, transport: [ external_messages, external_messages_to_forward, service_external_messages ] }
 
-    App\Share\Domain\Specification\SpecificationInterface:
+    App\Shared\Domain\Specification\SpecificationInterface:
       public: true
 
   App\*\Domain\Specification\:
@@ -48,7 +48,7 @@ services:
     resource: '../src/*/Domain/Factory'
     exclude: '../src/Share/*'
 
-  App\Share\Domain\Service\RedisService:
+  App\Shared\Domain\Service\RedisService:
     arguments:
       - '@app.service_redis_provider'
 
