@@ -15,8 +15,8 @@ class CustomerFactory
     {
     }
 
-    public function create(string $tin): Customer
+    public function create(string $tin, int $kontragentId): Customer
     {
-        return new Customer($tin, 1111111, $this->specification);
+        return new Customer($tin, $kontragentId, $this->specification);
     }
 }

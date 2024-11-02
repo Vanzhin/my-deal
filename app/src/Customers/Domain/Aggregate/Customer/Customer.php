@@ -6,6 +6,7 @@ namespace App\Customers\Domain\Aggregate\Customer;
 
 use App\Customers\Domain\Aggregate\Customer\Specification\CustomerSpecification;
 use App\Shared\Domain\Aggregate\Aggregate;
+use App\Shared\Domain\Service\AssertService;
 use App\Shared\Domain\Service\UuidService;
 
 class Customer extends Aggregate
@@ -47,6 +48,7 @@ class Customer extends Aggregate
     private function setTin(string $tin): void
     {
         $this->tin = $tin;
+        AssertService::maxLength($tin, 12, 'Invalid tin provided.');
         $this->specification->uniqueCustomerTinSpecification->satisfy($this);
     }
 

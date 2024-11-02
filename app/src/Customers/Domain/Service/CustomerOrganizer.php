@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace App\Customers\Domain\Service;
 
 
-
 use App\Customers\Domain\Aggregate\Customer\Customer;
 use App\Customers\Domain\Factory\CustomerFactory;
+use App\Customers\Domain\Repository\CustomerRepositoryInterface;
 use App\Shared\Application\Service\AccountingServiceInterface;
 use App\Shared\Domain\Service\AssertService;
 
-class CustomerOrganizer
+readonly class CustomerOrganizer
 {
     public function __construct(
-        private readonly CustomerFactory             $customerFactory,
-        private readonly AccountingServiceInterface $accountingService
+        private CustomerFactory             $customerFactory,
+        private AccountingServiceInterface  $accountingService,
+        private CustomerRepositoryInterface $customerRepository,
     )
     {
     }
@@ -25,14 +26,10 @@ class CustomerOrganizer
         // проверяю, есть ли такой клиент
         $response = $this->accountingService->getCustomerByTin($tin);
         AssertService::true($response->isSuccess(), $response->getMessage());
-        //todo  доделать
-        if (!$response->isSuccess()) {}
-        dd($response);
+        AssertService::false($response->isEmptySet(), 'No linked customer found.');
+        $customer = $this->customerFactory->create($tin, $response->getData()->id);
+        $this->customerRepository->add($customer);
 
-//        $response = $this->billingService->getAccountBalance($userId);
-//        AssertService::greaterThanEq($response->getData(), $sum, 'User has not enough money in the account.');
-        return $this->maker->make($userId, $sum);
+        return $customer;
     }
-
-
 }

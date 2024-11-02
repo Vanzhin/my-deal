@@ -24,11 +24,11 @@ class CustomerRepository extends ServiceEntityRepository implements CustomerRepo
 
     public function findOneByTin(string $tin): ?Customer
     {
-        // TODO: Implement findOneByTin() method.
+        return $this->findOneBy(['tin' => $tin]);
     }
 
     public function findOneKontragentId(int $kontragentId): ?Customer
     {
-        // TODO: Implement findOneKontragentId() method.
+        return $this->findOneBy(['kontragentId' => $kontragentId]);
     }
 }

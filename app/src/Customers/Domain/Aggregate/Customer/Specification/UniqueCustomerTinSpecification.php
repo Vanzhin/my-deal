@@ -18,9 +18,9 @@ readonly class UniqueCustomerTinSpecification implements SpecificationInterface
     public function satisfy(Customer $customer): void
     {
         $exist = $this->customerRepository->findOneByTin($customer->getTin());
-        AssertService::notNull(
+        AssertService::null(
             $exist,
-            sprintf('Customer with tin %s already exist.', $exist->getTin())
+            sprintf('Customer with tin %s already exist.', $exist?->getTin())
         );
     }
 

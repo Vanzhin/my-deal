@@ -18,23 +18,18 @@ class AddCustomerAction extends AbstractController
 {
     public function __construct(
         private readonly RequestHeadersService $requestHeadersService,
-        private readonly CommandBusInterface $commandBus,
+        private readonly CommandBusInterface   $commandBus,
     )
     {
     }
 
     public function __invoke(Request $request): JsonResponse
     {
-        try {
-            $tin = $this->requestHeadersService->getTin();
-            AssertService::notNull($tin, 'No Tin provided.');
-            $result = $this->commandBus->execute(new CreateCustomerCommand($tin));
+        $tin = $this->requestHeadersService->getTin();
+        AssertService::notNull($tin, 'No Tin provided.');
+        $result = $this->commandBus->execute(new CreateCustomerCommand($tin));
 
-            return new JsonResponse($result);
-        }catch (\Exception $exception){
-            dd($exception->getMessage());
-        }
-
+        return new JsonResponse($result);
     }
 
 }

@@ -18,9 +18,9 @@ readonly class UniqueCustomerKontragentIdSpecification implements SpecificationI
     public function satisfy(Customer $customer): void
     {
         $exist = $this->customerRepository->findOneKontragentId($customer->getKontragentId());
-        AssertService::notNull(
+        AssertService::null(
             $exist,
-            sprintf('Customer with kontragentId %s already exist.', $exist->getKontragentId())
+            sprintf('Customer with kontragentId %s already exist.', $exist?->getKontragentId())
         );
     }
 

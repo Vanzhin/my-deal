@@ -27,18 +27,26 @@ class ResponseMapper
     {
         $build = $this->build($response);
         if ($response->getStatusCode() === 200) {
-            $build = $this->buildCustomer($build);
+            $data = $this->buildCustomer($build) ?? [];
+        } else {
+            $message = $build['Message'] ?? null;
+            $data = null;
         }
 
         return new BasicResponse(
             $response->getStatusCode(),
-            $build,
+            $data,
+            $message ?? null,
         );
     }
 
-    private function buildCustomer(array $response): Customer
+    private function buildCustomer(array $response): ?Customer
     {
         $data = current($response['ResourceList']);
+        if (!$data) {
+            return null;
+        }
+
         return new Customer($data['Id'], $data['Inn']);
     }
 }
