@@ -7,10 +7,12 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ext-redis": "*",
         "doctrine/dbal": "^3",
         "doctrine/doctrine-bundle": "^2.12",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.2",
+        "guzzlehttp/guzzle": "^7.9",
         "symfony/amqp-messenger": "7.0.*",
         "symfony/console": "7.0.*",
         "symfony/dependency-injection": "7.0.*",
@@ -24,8 +26,7 @@
         "symfony/serializer": "7.0.*",
         "symfony/uid": "7.0.*",
         "symfony/yaml": "7.0.*",
-        "webmozart/assert": "^1.11",
-        "ext-redis": "*"
+        "webmozart/assert": "^1.11"
     },
     "config": {
         "allow-plugins": {

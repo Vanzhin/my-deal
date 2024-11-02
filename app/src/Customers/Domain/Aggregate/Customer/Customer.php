@@ -4,21 +4,29 @@ declare(strict_types=1);
 
 namespace App\Customers\Domain\Aggregate\Customer;
 
+use App\Customers\Domain\Aggregate\Customer\Specification\CustomerSpecification;
 use App\Shared\Domain\Aggregate\Aggregate;
 use App\Shared\Domain\Service\UuidService;
 
 class Customer extends Aggregate
 {
     private readonly string $id;
+    private CustomerSpecification $specification;
+    private string $tin;
+    private int $kontragentId;
 
 
     public function __construct(
-        private readonly string $tin,
-        private readonly int    $kontragentId,
+        string                $tin,
+        int                   $kontragentId,
+        CustomerSpecification $specification,
 
     )
     {
         $this->id = UuidService::generate();
+        $this->specification = $specification;
+        $this->setTin($tin);
+        $this->setKontragentId($kontragentId);
     }
 
     public function getId(): string
@@ -36,4 +44,15 @@ class Customer extends Aggregate
         return $this->kontragentId;
     }
 
+    private function setTin(string $tin): void
+    {
+        $this->tin = $tin;
+        $this->specification->uniqueCustomerTinSpecification->satisfy($this);
+    }
+
+    private function setKontragentId(int $kontragentId): void
+    {
+        $this->kontragentId = $kontragentId;
+        $this->specification->uniqueCustomerKontragentId->satisfy($this);
+    }
 }

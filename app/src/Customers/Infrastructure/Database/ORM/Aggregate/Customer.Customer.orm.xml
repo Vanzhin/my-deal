@@ -6,7 +6,7 @@
         <id name="id" type="string" length="26">
             <generator strategy="NONE"/>
         </id>
-        <field name="tin" column="tin" type="string" length="11"/>
-        <field name="kontragentId"  column="kontragent_id" type="integer"/>
+        <field name="tin" column="tin" type="string" length="11" unique="true"/>
+        <field name="kontragentId"  column="kontragent_id" type="integer" unique="true"/>
     </entity>
 </doctrine-mapping>

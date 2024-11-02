@@ -29,10 +29,6 @@ services:
       tags:
         - { name: messenger.message_handler, bus: event.bus }
 
-    App\Shared\Application\Message\MessageHandlerInterface:
-      tags:
-        - { name: messenger.message_handler, transport: [ external_messages, external_messages_to_forward, service_external_messages ] }
-
     App\Shared\Domain\Specification\SpecificationInterface:
       public: true
 
@@ -40,13 +36,13 @@ services:
     namespace: App\
     public: true
     resource: '../src/*/Domain/Specification'
-    exclude: '../src/Share/*'
+    exclude: '../src/Shared/*'
 
   App\*\Domain\Factory\:
     namespace: App\
     public: true
     resource: '../src/*/Domain/Factory'
-    exclude: '../src/Share/*'
+    exclude: '../src/Shared/*'
 
   App\Shared\Domain\Service\RedisService:
     arguments:
@@ -58,3 +54,13 @@ services:
     arguments:
       - 'redis://%env(resolve:REDIS_HOST)%'
       - { retry_interval: 2, timeout: 10 }
+
+  ## Accounting Api
+  App\Shared\Infrastructure\Api\Accounting\Api:
+    arguments:
+      $config:
+        base_uri: '%env(BASE_URI_ACCOUNTING)%'
+        headers:
+          Accept: 'application/json'
+          md-api-key: '%env(API_TOKEN_ACCOUNTING)%'
+        http_errors: false
