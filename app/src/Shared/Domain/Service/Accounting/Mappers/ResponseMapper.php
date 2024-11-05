@@ -88,8 +88,8 @@ class ResponseMapper
             $data['Number'],
             $data['DocDate'],
             $data['IsCovered'] ?? null,
-            (int)$data['Sum'] ?? null,
-            (int)$data['PaidSum'] ?? null,
+            $data['Sum'] ?? null,
+            $data['PaidSum'] ?? null,
             $data['Comment'] ?? null,
         );
     }

@@ -33,8 +33,8 @@ readonly class CustomerBill implements JsonSerializable
         private string  $number,
         private string  $date,
         private ?bool   $is_covered,
-        private ?int    $sum,
-        private ?int    $paid_sum,
+        private ?float  $sum,
+        private ?float  $paid_sum,
         private ?string $comment,
     )
     {
@@ -60,12 +60,12 @@ readonly class CustomerBill implements JsonSerializable
         return $this->is_covered;
     }
 
-    public function getSum(): ?int
+    public function getSum(): ?float
     {
         return $this->sum;
     }
 
-    public function getPaidSum(): ?int
+    public function getPaidSum(): ?float
     {
         return $this->paid_sum;
     }
