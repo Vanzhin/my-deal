@@ -2,12 +2,14 @@
 declare(strict_types=1);
 
 
-namespace App\Shared\Infrastructure\Controller;
+namespace App\Customers\Infrastructure\Controller;
 
+use App\Customers\Domain\Event\CustomerFoundEvent;
 use App\Customers\Domain\Repository\CustomerRepositoryInterface;
+use App\Shared\Application\Event\EventBusInterface;
 use App\Shared\Application\Service\AccountingServiceInterface;
-use App\Shared\Domain\Service\AssertService;
 use App\Shared\Domain\Service\RequestHeadersService;
+use App\Shared\Infrastructure\Exception\AppException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BaseController extends AbstractController
@@ -18,16 +20,23 @@ class BaseController extends AbstractController
         private readonly RequestHeadersService       $headersService,
         private readonly CustomerRepositoryInterface $customerRepository,
         private readonly AccountingServiceInterface  $accountingService,
+        private readonly EventBusInterface           $eventBus,
     )
     {
         $tin = $this->headersService->getTin();
-        AssertService::notNull($tin, 'No Tin provided.');
+        if (!$tin) {
+            throw new AppException('No Tin provided.', 422);
+        }
         $this->kontragentId = $this->customerRepository->findOneByTin($tin)?->getKontragentId();
-        AssertService::notNull($this->kontragentId, 'No Customer found.');
-
-        //todo если нету в нашей бд, выполнить запрос в мое дело, если и там нет, то кинуть ошибку
-
-
+        if ($this->kontragentId) {
+            return;
+        }
+        $result = $this->accountingService->getCustomerByTin($tin);
+        if ($result->isEmptySet()) {
+            throw new AppException('No customer found.', 422);
+        }
+        $this->kontragentId = $result->getData()?->id;
+        $this->eventBus->execute(new CustomerFoundEvent($tin));
     }
 
 }
