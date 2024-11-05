@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Shared\Domain\Service\Accounting\Response;
 
-class BasicResponse implements BasicResponseInterface, \JsonSerializable
+use App\Shared\Domain\Service\Accounting\PaginationResult;
+
+class PaginatedResponse implements BasicResponseInterface, \JsonSerializable
 {
     public function __construct(
-        private int     $httpStatus,
-        private mixed   $data,
-        private ?string $message = null,
+        private int              $httpStatus,
+        private PaginationResult $data,
+        private ?string          $message = null
     )
     {
     }
@@ -19,17 +21,11 @@ class BasicResponse implements BasicResponseInterface, \JsonSerializable
         return $this->getHttpStatus() >= 200 && $this->getHttpStatus() < 300;
     }
 
-    /**
-     * @return int
-     */
     public function getHttpStatus(): int
     {
         return $this->httpStatus;
     }
 
-    /**
-     * @return mixed
-     */
     public function getData(): mixed
     {
         return $this->data;
@@ -40,15 +36,12 @@ class BasicResponse implements BasicResponseInterface, \JsonSerializable
         return $this->message;
     }
 
-    /**
-     * @return bool
-     */
     public function isEmptySet(): bool
     {
-        return [] === $this->data;
+        return $this->data->items === [];
     }
 
-    public function jsonSerialize(): array
+    public function jsonSerialize(): mixed
     {
         return get_object_vars($this);
     }

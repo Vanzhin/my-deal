@@ -44,6 +44,10 @@ services:
     resource: '../src/*/Domain/Factory'
     exclude: '../src/Shared/*'
 
+  App\Shared\Infrastructure\Controller\BaseController:
+    arguments:
+      - '@App\Shared\Domain\Service\RequestHeadersService'
+
   App\Shared\Domain\Service\RedisService:
     arguments:
       - '@app.service_redis_provider'
@@ -64,3 +68,7 @@ services:
           Accept: 'application/json'
           md-api-key: '%env(API_TOKEN_ACCOUNTING)%'
         http_errors: false
+
+  App\Shared\Infrastructure\Validation\Validator:
+    arguments:
+      $validatorBuilder: '@validator.builder'
