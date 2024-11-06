@@ -5,14 +5,15 @@ namespace App\Shared\Domain\Service\Accounting\Mappers;
 
 use App\Shared\Domain\Service\Accounting\PaginationResult;
 use App\Shared\Domain\Service\Accounting\Response\PaginatedResponse;
+use App\Shared\Domain\Service\Accounting\Response\ResponseFile;
 use App\Shared\Domain\Service\Accounting\VO\Customer;
 use App\Shared\Domain\Service\Accounting\Response\BasicResponse;
 use App\Shared\Domain\Service\Accounting\VO\CustomerBill;
+use App\Shared\Domain\Service\UuidService;
 use Psr\Http\Message\ResponseInterface;
 
 class ResponseMapper
 {
-
     public function buildBasicResponse(ResponseInterface $response): BasicResponse
     {
         $build = $this->build($response);
@@ -46,7 +47,6 @@ class ResponseMapper
         );
     }
 
-
     public function buildCustomerListResponse(ResponseInterface $response): PaginatedResponse
     {
         $build = $this->build($response);
@@ -64,6 +64,13 @@ class ResponseMapper
             $data,
             null,
         );
+    }
+
+    public function buildCustomerBillFileResponse(ResponseInterface $response): ResponseFile
+    {
+        preg_match('/^.*filename[^;=\n]*=utf-8\'\'(([\'"]).*?\2|[^;\n]*)[\n;]?$/', $response->getHeaderLine('content-disposition'), $fName);
+        $fileName = UuidService::generate() . '.' . (new \SplFileInfo($fName[1]))->getExtension();
+        return new ResponseFile($response->getBody(), $fileName, $response->getHeaderLine('content-type'));
     }
 
     private function build(ResponseInterface $response): array

@@ -4,13 +4,28 @@ declare(strict_types=1);
 
 namespace App\Customers\Infrastructure\Mapper;
 
+use App\Shared\Domain\Service\Accounting\Filters\CustomerBillFileFilter;
 use App\Shared\Domain\Service\Accounting\Filters\CustomerBillFilter;
+use App\Shared\Domain\Service\Accounting\Filters\VO\BillFileFormat;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
 class CustomerMapper
 {
+    public function buildCustomerBillFileFilterFromRequest(Request $request): CustomerBillFileFilter
+    {
+        $filter = new CustomerBillFileFilter($request->getPayload()->get('bill_id'));
+        if ($addStamp = $request->getPayload()->get('has_stamp_and_sign')) {
+            $filter->setHasStampAndSign($addStamp);
+        }
+        if ($format = $request->getPayload()->get('file_format')) {
+            $filter->setBillFormat(BillFileFormat::from($format));
+        }
+
+        return $filter;
+    }
+
     public function buildCustomerBillFilterFromRequest(Request $request, int $kontragentId): CustomerBillFilter
     {
         $filter = new CustomerBillFilter($kontragentId);
@@ -57,4 +72,25 @@ class CustomerMapper
             ]),
         ]);
     }
+
+    public function getValidationCollectionCustomerBillFile(): Assert\Collection
+    {
+        return new Assert\Collection([
+            'bill_id' => [
+                new Assert\NotBlank(),
+                new Assert\Type('numeric')
+            ],
+            'has_stamp_and_sign' => new Assert\Optional([
+                new Assert\NotBlank(),
+                new Assert\Type('boolean')
+            ]),
+
+            'file_format' => new Assert\Optional([
+                new Assert\NotBlank(),
+                new Assert\Choice(BillFileFormat::getAllValues(),
+                    message: sprintf('Invalid choice. Supported: %s.', implode(', ', BillFileFormat::getAllValues())))
+            ]),
+        ]);
+    }
+
 }
